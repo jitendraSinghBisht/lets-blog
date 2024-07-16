@@ -64,10 +64,6 @@ func createUserTable(svc *dynamodb.DynamoDB) {
 				AttributeName: aws.String("userID"),
 				KeyType:       aws.String("HASH"),
 			},
-			{
-				AttributeName: aws.String("createdAt"),
-				KeyType:       aws.String("RANGE"),
-			},
 		},
 		GlobalSecondaryIndexes: []*dynamodb.GlobalSecondaryIndex{
 			{
@@ -76,10 +72,6 @@ func createUserTable(svc *dynamodb.DynamoDB) {
 					{
 						AttributeName: aws.String("userEmail"),
 						KeyType:       aws.String("HASH"),
-					},
-					{
-						AttributeName: aws.String("userName"),
-						KeyType:       aws.String("RANGE"),
 					},
 				},
 				Projection: &dynamodb.Projection{
@@ -126,6 +118,10 @@ func createBlogTable(svc *dynamodb.DynamoDB) {
 				AttributeType: aws.String("S"),
 			},
 			{
+				AttributeName: aws.String("status"),
+				AttributeType: aws.String("S"),
+			},
+			{
 				AttributeName: aws.String("createdAt"),
 				AttributeType: aws.String("S"),
 			},
@@ -134,10 +130,6 @@ func createBlogTable(svc *dynamodb.DynamoDB) {
 			{
 				AttributeName: aws.String("blogID"),
 				KeyType:       aws.String("HASH"),
-			},
-			{
-				AttributeName: aws.String("createdAt"),
-				KeyType:       aws.String("RANGE"),
 			},
 		},
 		GlobalSecondaryIndexes: []*dynamodb.GlobalSecondaryIndex{
@@ -149,7 +141,26 @@ func createBlogTable(svc *dynamodb.DynamoDB) {
 						KeyType:       aws.String("HASH"),
 					},
 					{
-						AttributeName: aws.String("blogId"),
+						AttributeName: aws.String("createdAt"),
+						KeyType:       aws.String("RANGE"),
+					},
+				},
+				Projection: &dynamodb.Projection{
+					ProjectionType: aws.String("ALL"),
+				},
+				ProvisionedThroughput: &dynamodb.ProvisionedThroughput{
+					ReadCapacityUnits:  aws.Int64(5),
+					WriteCapacityUnits: aws.Int64(5),
+				},
+			},{
+				IndexName: aws.String(config.GetDynamoBlogGsiTable()),
+				KeySchema: []*dynamodb.KeySchemaElement{
+					{
+						AttributeName: aws.String("status"),
+						KeyType:       aws.String("HASH"),
+					},
+					{
+						AttributeName: aws.String("createdAt"),
 						KeyType:       aws.String("RANGE"),
 					},
 				},
