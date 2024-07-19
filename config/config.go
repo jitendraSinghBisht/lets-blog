@@ -23,6 +23,7 @@ type Config struct {
 	ServerPort     string
 	DynamoEndpoint string
 	DynamoTable    DynamoTableConfig
+	JwtSigningKey  string
 }
 
 var instance *Config
@@ -49,9 +50,10 @@ func Init() {
 			DynamoTable: DynamoTableConfig{
 				User: getEnvWithDefault("USER_TABLE", "Users"),
 				Blog: getEnvWithDefault("BLOG_TABLE", "Blogs"),
-				UserGSI: getEnvWithDefault("USER_TABLE", "UsersGsi"),
-				BlogGSI: getEnvWithDefault("BLOG_TABLE", "BlogsGsi"),
+				UserGSI: getEnvWithDefault("USER_TABLE_GSI", "UsersGsi"),
+				BlogGSI: getEnvWithDefault("BLOG_TABLE_GSI", "BlogsGsi"),
 			},
+			JwtSigningKey: getEnvWithDefault("JWT_SIGNING_KEY", "SecretKeyHere"),
 		}
 	}
 }
@@ -94,4 +96,8 @@ func GetDynamoUserGsiTable() string {
 
 func GetDynamoBlogGsiTable() string {
 	return instance.DynamoTable.BlogGSI
+}
+
+func GetJwtSigningKey() string {
+	return instance.JwtSigningKey
 }
